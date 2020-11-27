@@ -178,12 +178,14 @@ def create_task_from_config(config: dict, base_path: Optional[str] = None, verbo
         # TODO: Refactor paths  (issue #1180)
         if isinstance(path, str) and not os.path.isabs(path):
             assert base_path
-            config["paths"][k] = os.path.join(base_path, path)
+            # config["paths"][k] = os.path.join(base_path, path) unncessary in my opinion
+            config["paths"][k] = path
     task_kwargs = config.get("kwargs", {})
     if verbose:
         print(task_class.__name__)
         for k, v in config["paths"].items():
             print(f"  [{k}]: {v}")
+    print(config["paths"])
     # noinspection PyArgumentList
     return task_class(name=config["name"], path_dict=config["paths"], **task_kwargs)
 

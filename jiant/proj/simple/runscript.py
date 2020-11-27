@@ -145,6 +145,7 @@ def run_simple(args: RunConfiguration, with_continue: bool = False):
             if not phases_to_do:
                 continue
             print(f"Tokenizing Task '{task_name}' for phases '{','.join(phases_to_do)}'")
+            print('YEAHHHH')
             tokenize_and_cache.main(
                 tokenize_and_cache.RunConfiguration(
                     task_config_path=task_config_path_dict[task_name],

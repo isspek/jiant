@@ -7,6 +7,14 @@ DIRECT_SUPERGLUE_TASKS_TO_DATA_URLS = {
     "record": f"https://dl.fbaipublicfiles.com/glue/superglue/data/v2/ReCoRD.zip",
 }
 
+FAKENEWS_TASKS = {"forecasting_cind", "fakenews_unseen_1", "fakenews_unseen_2", "fakenews_unseen_3",
+                  "fakenews_unseen_4", "fakenews_unseen_5",
+                  "nela_unseen_1", "nela_unseen_2", "nela_unseen_3",
+                  "nela_unseen_4", "nela_unseen_5"
+                  }
+
+CLAIMBUSTER_TASKS = {'claimbuster_1', 'claimbuster_2', 'claimbuster_3', 'claimbuster_4', 'claimbuster_5'}
+
 OTHER_DOWNLOAD_TASKS = {
     "abductive_nli",
     "fever_nli",

@@ -73,10 +73,11 @@ from jiant.tasks.lib.mcscript import MCScriptTask
 from jiant.tasks.lib.arct import ArctTask
 from jiant.tasks.lib.winogrande import WinograndeTask
 from jiant.tasks.lib.piqa import PiqaTask
+from jiant.tasks.lib.fakenewstasks.fakenewsdetection import ForecastingTask
+from jiant.tasks.lib.fakenewstasks.claimbuster import ClaimBusterTask
 
 from jiant.tasks.core import Task
 from jiant.utils.python.io import read_json
-
 
 TASK_DICT = {
     "abductive_nli": AbductiveNliTask,
@@ -151,10 +152,26 @@ TASK_DICT = {
     "arct": ArctTask,
     "winogrande": WinograndeTask,
     "piqa": PiqaTask,
+    "fakenews_unseen_1": ForecastingTask,
+    "fakenews_unseen_2": ForecastingTask,
+    "fakenews_unseen_3": ForecastingTask,
+    "fakenews_unseen_4": ForecastingTask,
+    "fakenews_unseen_5": ForecastingTask,
+    "nela_unseen_1": ForecastingTask,
+    "nela_unseen_2": ForecastingTask,
+    "nela_unseen_3": ForecastingTask,
+    "nela_unseen_4": ForecastingTask,
+    "nela_unseen_5": ForecastingTask,
+    "claimbuster_1": ClaimBusterTask,
+    "claimbuster_2": ClaimBusterTask,
+    "claimbuster_3": ClaimBusterTask,
+    "claimbuster_4": ClaimBusterTask,
+    "claimbuster_5": ClaimBusterTask,
 }
 
 
 def get_task_class(task_name: str):
+    print(task_name)
     task_class = TASK_DICT[task_name]
     assert issubclass(task_class, Task)
     return task_class

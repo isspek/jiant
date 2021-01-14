@@ -13,7 +13,8 @@ import jiant.utils.display as display
 import jiant.utils.python.filesystem as filesystem
 import jiant.utils.python.io as py_io
 
-from jiant.scripts.download_data.constants import SQUAD_TASKS, DIRECT_SUPERGLUE_TASKS_TO_DATA_URLS
+from jiant.scripts.download_data.constants import SQUAD_TASKS, DIRECT_SUPERGLUE_TASKS_TO_DATA_URLS, FAKENEWS_TASKS, \
+    CLAIMBUSTER_TASKS
 
 
 def download_task_data_and_write_config(task_name: str, task_data_path: str, task_config_path: str):
@@ -61,12 +62,120 @@ def download_task_data_and_write_config(task_name: str, task_data_path: str, tas
         download_winogrande_data_and_write_config(
             task_name=task_name, task_data_path=task_data_path, task_config_path=task_config_path
         )
+    elif task_name in FAKENEWS_TASKS:
+        download_fakenews_data_and_write_config(task_name=task_name, task_data_path=task_data_path,
+                                                task_config_path=task_config_path)
+    elif task_name in CLAIMBUSTER_TASKS:
+        download_claimbuster_data_and_write_config(task_name=task_name, task_data_path=task_data_path,
+                                                   task_config_path=task_config_path)
     else:
         raise KeyError(task_name)
 
 
+def download_claimbuster_data_and_write_config(
+        task_name: str, task_data_path: str, task_config_path: str
+):
+    test_file = "crowdsourced.csv"
+    if task_name == "claimbuster_1":
+        train_file = "claimbuster_train_1.csv"
+        val_file = "claimbuster_val_1.csv"
+    elif task_name == "claimbuster_2":
+        train_file = "claimbuster_train_2.csv"
+        val_file = "claimbuster_val_2.csv"
+    elif task_name == "claimbuster_3":
+        train_file = "claimbuster_train_3.csv"
+        val_file = "claimbuster_val_3.csv"
+    elif task_name == "claimbuster_4":
+        train_file = "claimbuster_train_4.csv"
+        val_file = "claimbuster_val_4.csv"
+    elif task_name == "claimbuster_5":
+        train_file = "claimbuster_train_5.csv"
+        val_file = "claimbuster_val_5.csv"
+    else:
+        raise KeyError(task_name)
+
+    os.makedirs(task_data_path, exist_ok=True)
+    os.makedirs(os.path.join(task_data_path, 'configs'), exist_ok=True)
+    train_path = os.path.join(task_data_path, train_file)
+    val_path = os.path.join(task_data_path, val_file)
+    test_path = os.path.join(task_data_path, test_file)
+    py_io.write_json(
+        data={
+            "task": task_name,
+            "paths": {"train": train_path, "val": val_path, "test": test_path},
+            "name": task_name,
+        },
+        path=task_config_path,
+    )
+
+
+def download_fakenews_data_and_write_config(
+        task_name: str, task_data_path: str, task_config_path: str
+):
+    if task_name == "fakenews_forecasting":
+        train_file = "forecast_train.tsv"
+        val_file = "forecast_val.tsv"
+        test_file = "forecast_test.tsv"
+    elif task_name == "fakenews_unseen_1":
+        train_file = "unseen_train_1.tsv"
+        val_file = "unseen_val_1.tsv"
+        test_file = "unseen_test_1.tsv"
+    elif task_name == "fakenews_unseen_2":
+        train_file = "unseen_train_2.tsv"
+        val_file = "unseen_val_2.tsv"
+        test_file = "unseen_test_2.tsv"
+    elif task_name == "fakenews_unseen_3":
+        train_file = "unseen_train_3.tsv"
+        val_file = "unseen_val_3.tsv"
+        test_file = "unseen_test_3.tsv"
+    elif task_name == "fakenews_unseen_4":
+        train_file = "unseen_train_4.tsv"
+        val_file = "unseen_val_4.tsv"
+        test_file = "unseen_test_4.tsv"
+    elif task_name == "fakenews_unseen_5":
+        train_file = "unseen_train_5.tsv"
+        val_file = "unseen_val_5.tsv"
+        test_file = "unseen_test_5.tsv"
+    elif task_name == "nela_unseen_1":
+        train_file = "nela_train_1.tsv"
+        val_file = "nela_val_1.tsv"
+        test_file = "nela_test_1.tsv"
+    elif task_name == "nela_unseen_2":
+        train_file = "nela_train_2.tsv"
+        val_file = "nela_val_2.tsv"
+        test_file = "nela_test_2.tsv"
+    elif task_name == "nela_unseen_3":
+        train_file = "nela_train_3.tsv"
+        val_file = "nela_val_3.tsv"
+        test_file = "nela_test_3.tsv"
+    elif task_name == "nela_unseen_4":
+        train_file = "nela_train_4.tsv"
+        val_file = "nela_val_4.tsv"
+        test_file = "nela_test_4.tsv"
+    elif task_name == "nela_unseen_5":
+        train_file = "nela_train_5.tsv"
+        val_file = "nela_val_5.tsv"
+        test_file = "nela_test_5.tsv"
+    else:
+        raise KeyError(task_name)
+
+    os.makedirs(task_data_path, exist_ok=True)
+    os.makedirs(os.path.join(task_data_path, 'configs'), exist_ok=True)
+    train_path = os.path.join(task_data_path, train_file)
+    val_path = os.path.join(task_data_path, val_file)
+    test_path = os.path.join(task_data_path, test_file)
+    py_io.write_json(
+        data={
+            "task": task_name,
+            "paths": {"train": train_path, "val": val_path, "test": test_path},
+            "name": task_name,
+        },
+        path=task_config_path,
+    )
+
+
 def download_squad_data_and_write_config(
-    task_name: str, task_data_path: str, task_config_path: str
+        task_name: str, task_data_path: str, task_config_path: str
 ):
     if task_name == "squad_v1":
         train_file = "train-v1.1.json"
@@ -91,7 +200,7 @@ def download_squad_data_and_write_config(
     )
     py_io.write_json(
         data={
-            "task": "squad",
+            "task": task_name,
             "paths": {"train": train_path, "val": val_path},
             "kwargs": {"version_2_with_negative": version_2_with_negative},
             "name": task_name,
@@ -101,7 +210,7 @@ def download_squad_data_and_write_config(
 
 
 def download_superglue_data_and_write_config(
-    task_name: str, task_data_path: str, task_config_path: str
+        task_name: str, task_data_path: str, task_config_path: str
 ):
     # Applies to ReCoRD, MultiRC and WSC
     assert task_name not in SQUAD_TASKS
@@ -144,7 +253,7 @@ def download_superglue_data_and_write_config(
 
 
 def download_abductive_nli_data_and_write_config(
-    task_name: str, task_data_path: str, task_config_path: str
+        task_name: str, task_data_path: str, task_config_path: str
 ):
     os.makedirs(task_data_path, exist_ok=True)
     download_utils.download_and_unzip(
@@ -167,7 +276,7 @@ def download_abductive_nli_data_and_write_config(
 
 
 def download_fever_nli_data_and_write_config(
-    task_name: str, task_data_path: str, task_config_path: str
+        task_name: str, task_data_path: str, task_config_path: str
 ):
     os.makedirs(task_data_path, exist_ok=True)
     download_utils.download_and_unzip(
@@ -284,7 +393,7 @@ def download_qamr_data_and_write_config(task_name: str, task_data_path: str, tas
 
 
 def download_qasrl_data_and_write_config(
-    task_name: str, task_data_path: str, task_config_path: str
+        task_name: str, task_data_path: str, task_config_path: str
 ):
     os.makedirs(task_data_path, exist_ok=True)
     download_utils.download_and_untar(
@@ -313,7 +422,7 @@ def download_qasrl_data_and_write_config(
 
 
 def download_newsqa_data_and_write_config(
-    task_name: str, task_data_path: str, task_config_path: str
+        task_name: str, task_data_path: str, task_config_path: str
 ):
     def get_consensus_answer(row_):
         answer_char_start, answer_char_end = None, None
@@ -353,7 +462,7 @@ def download_newsqa_data_and_write_config(
 
         if "story_text" in result.keys():
             for row_ in display.tqdm(
-                result.itertuples(), total=len(result), desc="Adjusting story texts"
+                    result.itertuples(), total=len(result), desc="Adjusting story texts"
             ):
                 story_text_ = row_.story_text.replace("\r\n", "\n")
                 result.at[row_.Index, "story_text"] = story_text_
@@ -381,7 +490,7 @@ def download_newsqa_data_and_write_config(
     # Require: cnn_stories.tgz
     cnn_stories_path = os.path.join(task_data_path, "cnn_stories.tgz")
     assert os.path.exists(cnn_stories_path), (
-        "Download CNN Stories from https://cs.nyu.edu/~kcho/DMQA/ and save to " + cnn_stories_path
+            "Download CNN Stories from https://cs.nyu.edu/~kcho/DMQA/ and save to " + cnn_stories_path
     )
     # Require: newsqa-data-v1/newsqa-data-v1.csv
     dataset_path = os.path.join(task_data_path, "newsqa-data-v1", "newsqa-data-v1.csv")
@@ -418,19 +527,19 @@ def download_newsqa_data_and_write_config(
     dataset = load_combined(dataset_path)
     remaining_story_ids = set(dataset["story_id"])
     with open(
-        os.path.join(task_data_path, "stories_requiring_extra_newline.csv"), "r", encoding="utf-8"
+            os.path.join(task_data_path, "stories_requiring_extra_newline.csv"), "r", encoding="utf-8"
     ) as f:
         stories_requiring_extra_newline = set(f.read().split("\n"))
 
     with open(
-        os.path.join(task_data_path, "stories_requiring_two_extra_newlines.csv"),
-        "r",
-        encoding="utf-8",
+            os.path.join(task_data_path, "stories_requiring_two_extra_newlines.csv"),
+            "r",
+            encoding="utf-8",
     ) as f:
         stories_requiring_two_extra_newlines = set(f.read().split("\n"))
 
     with open(
-        os.path.join(task_data_path, "stories_to_decode_specially.csv"), "r", encoding="utf-8"
+            os.path.join(task_data_path, "stories_to_decode_specially.csv"), "r", encoding="utf-8"
     ) as f:
         stories_to_decode_specially = set(f.read().split("\n"))
 
@@ -641,7 +750,7 @@ def download_newsqa_data_and_write_config(
 
 
 def download_mrqa_natural_questions_data_and_write_config(
-    task_name: str, task_data_path: str, task_config_path: str
+        task_name: str, task_data_path: str, task_config_path: str
 ):
     os.makedirs(task_data_path, exist_ok=True)
     download_utils.download_file(
@@ -705,7 +814,7 @@ def download_piqa_data_and_write_config(task_name: str, task_data_path: str, tas
 
 
 def download_winogrande_data_and_write_config(
-    task_name: str, task_data_path: str, task_config_path: str
+        task_name: str, task_data_path: str, task_config_path: str
 ):
     os.makedirs(task_data_path, exist_ok=True)
     download_utils.download_and_unzip(

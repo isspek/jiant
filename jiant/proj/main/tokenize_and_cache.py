@@ -142,7 +142,6 @@ def iter_chunk_and_save(task, phase, examples, feat_spec, tokenizer, args: RunCo
 
 
 def main(args: RunConfiguration):
-    print(args.task_config_path)
     task = tasks.create_task_from_config_path(config_path=args.task_config_path, verbose=True)
     feat_spec = model_resolution.build_featurization_spec(
         model_type=args.model_type, max_seq_length=args.max_seq_length,
@@ -158,7 +157,6 @@ def main(args: RunConfiguration):
 
     paths_dict = {}
     os.makedirs(args.output_dir, exist_ok=True)
-    print('YESSSSS')
     if PHASE.TRAIN in phases:
         chunk_and_save(
             task=task,
@@ -168,8 +166,6 @@ def main(args: RunConfiguration):
             tokenizer=tokenizer,
             args=args,
         )
-        print('LOOOL')
-        print(args.output_dir)
         paths_dict["train"] = os.path.join(args.output_dir, PHASE.TRAIN)
 
     if PHASE.VAL in phases:

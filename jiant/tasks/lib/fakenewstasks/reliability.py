@@ -6,6 +6,7 @@ from typing import List
 from cleantext import clean
 import re
 import csv
+import sys
 from jiant.tasks.core import (
     BaseExample,
     BaseTokenizedExample,
@@ -15,7 +16,7 @@ from jiant.tasks.core import (
     TaskTypes,
 )
 from jiant.tasks.lib.templates.shared import double_sentence_featurize, labels_to_bimap
-
+csv.field_size_limit(sys.maxsize)
 
 def clean_text(text):
     if type(text) == float:
@@ -41,7 +42,6 @@ def clean_text(text):
                          replace_with_currency_symbol="[CUR]",
                          lang="en"  # set to 'de' for German special handling
                          )
-    cleaned_text = cleaned_text.strip()
     return cleaned_text
 
 
@@ -57,7 +57,7 @@ class Example(BaseExample):
             guid=self.guid,
             title=tokenizer.tokenize(self.title),
             content=tokenizer.tokenize(self.content),
-            label_id=ForecastingTask.LABEL_TO_ID[self.label],
+            label_id=ReliabilityTask.LABEL_TO_ID[self.label],
         )
 
 
@@ -99,13 +99,13 @@ class TokenizedExample(BaseTokenizedExample):
         )
 
 
-class ForecastingTask(Task):
+class ReliabilityTask(Task):
     Example = Example
     TokenizedExample = Example
     DataRow = DataRow
     Batch = Batch
     TASK_TYPE = TaskTypes.CLASSIFICATION
-    LABELS = ['right', 'satire', 'propaganda', 'conspiracy', 'neutral', 'left']
+    LABELS = ['reliable', 'unreliable', 'satire']
     LABEL_TO_ID, ID_TO_LABEL = labels_to_bimap(LABELS)
 
     def get_train_examples(self):
@@ -125,7 +125,7 @@ class ForecastingTask(Task):
                                     skipinitialspace=True)
             next(csv_reader)
             for i, row in enumerate(csv_reader):
-                url, title, content, label = row
+                title, content, source, label = row
                 content = clean_text(content)
                 title = clean_text(title)
                 examples.append(

@@ -156,6 +156,50 @@ def download_fakenews_data_and_write_config(
         train_file = "nela_train_5.tsv"
         val_file = "nela_val_5.tsv"
         test_file = "nela_test_5.tsv"
+    elif task_name == "fakenews_unseen_reliability_1":
+        train_file = "unseen_reliability_train_1.tsv"
+        val_file = "unseen_reliability_val_1.tsv"
+        test_file = "unseen_reliability_test_1.tsv"
+    elif task_name == "fakenews_unseen_reliability_2":
+        train_file = "unseen_reliability_train_2.tsv"
+        val_file = "unseen_reliability_val_2.tsv"
+        test_file = "unseen_reliability_test_2.tsv"
+    elif task_name == "fakenews_unseen_reliability_3":
+        train_file = "unseen_reliability_train_3.tsv"
+        val_file = "unseen_reliability_val_3.tsv"
+        test_file = "unseen_reliability_test_3.tsv"
+    elif task_name == "fakenews_unseen_reliability_4":
+        train_file = "unseen_reliability_train_4.tsv"
+        val_file = "unseen_reliability_val_4.tsv"
+        test_file = "unseen_reliability_test_4.tsv"
+    elif task_name == "fakenews_unseen_reliability_5":
+        train_file = "unseen_reliability_train_5.tsv"
+        val_file = "unseen_reliability_val_5.tsv"
+        test_file = "unseen_reliability_test_5.tsv"
+    elif task_name == "fakenews_forecasting_reliability":
+        train_file = "forecast_reliability_train.tsv"
+        val_file = "forecast_reliability_val.tsv"
+        test_file = "forecast_reliability_test.tsv"
+    elif task_name == "fakenewscorpus_1":
+        train_file = "fakenewscorpus_train_1.tsv"
+        val_file = "fakenewscorpus_val_1.tsv"
+        test_file = "fakenewscorpus_test_1.tsv"
+    elif task_name == "fakenewscorpus_2":
+        train_file = "fakenewscorpus_train_2.tsv"
+        val_file = "fakenewscorpus_val_2.tsv"
+        test_file = "fakenewscorpus_test_2.tsv"
+    elif task_name == "fakenewscorpus_3":
+        train_file = "fakenewscorpus_train_3.tsv"
+        val_file = "fakenewscorpus_val_3.tsv"
+        test_file = "fakenewscorpus_test_3.tsv"
+    elif task_name == "fakenewscorpus_4":
+        train_file = "fakenewscorpus_train_4.tsv"
+        val_file = "fakenewscorpus_val_4.tsv"
+        test_file = "fakenewscorpus_test_4.tsv"
+    elif task_name == "fakenewscorpus_5":
+        train_file = "fakenewscorpus_train_5.tsv"
+        val_file = "fakenewscorpus_val_5.tsv"
+        test_file = "fakenewscorpus_test_5.tsv"
     else:
         raise KeyError(task_name)
 

@@ -74,6 +74,7 @@ from jiant.tasks.lib.arct import ArctTask
 from jiant.tasks.lib.winogrande import WinograndeTask
 from jiant.tasks.lib.piqa import PiqaTask
 from jiant.tasks.lib.fakenewstasks.fakenewsdetection import ForecastingTask
+from jiant.tasks.lib.fakenewstasks.reliability import ReliabilityTask
 from jiant.tasks.lib.fakenewstasks.claimbuster import ClaimBusterTask
 
 from jiant.tasks.core import Task
@@ -157,21 +158,32 @@ TASK_DICT = {
     "fakenews_unseen_3": ForecastingTask,
     "fakenews_unseen_4": ForecastingTask,
     "fakenews_unseen_5": ForecastingTask,
-    "nela_unseen_1": ForecastingTask,
-    "nela_unseen_2": ForecastingTask,
-    "nela_unseen_3": ForecastingTask,
-    "nela_unseen_4": ForecastingTask,
-    "nela_unseen_5": ForecastingTask,
+    "fakenews_forecasting": ForecastingTask,
+    "nela_unseen_1": ReliabilityTask,
+    "nela_unseen_2": ReliabilityTask,
+    "nela_unseen_3": ReliabilityTask,
+    "nela_unseen_4": ReliabilityTask,
+    "nela_unseen_5": ReliabilityTask,
     "claimbuster_1": ClaimBusterTask,
     "claimbuster_2": ClaimBusterTask,
     "claimbuster_3": ClaimBusterTask,
     "claimbuster_4": ClaimBusterTask,
     "claimbuster_5": ClaimBusterTask,
+    "fakenews_unseen_reliability_1": ReliabilityTask,
+    "fakenews_unseen_reliability_2": ReliabilityTask,
+    "fakenews_unseen_reliability_3": ReliabilityTask,
+    "fakenews_unseen_reliability_4": ReliabilityTask,
+    "fakenews_unseen_reliability_5": ReliabilityTask,
+    "fakenews_forecasting_reliability": ReliabilityTask,
+    "fakenewscorpus_1": ReliabilityTask,
+    "fakenewscorpus_2": ReliabilityTask,
+    "fakenewscorpus_3": ReliabilityTask,
+    "fakenewscorpus_4": ReliabilityTask,
+    "fakenewscorpus_5": ReliabilityTask,
 }
 
 
 def get_task_class(task_name: str):
-    print(task_name)
     task_class = TASK_DICT[task_name]
     assert issubclass(task_class, Task)
     return task_class
@@ -202,7 +214,6 @@ def create_task_from_config(config: dict, base_path: Optional[str] = None, verbo
         print(task_class.__name__)
         for k, v in config["paths"].items():
             print(f"  [{k}]: {v}")
-    print(config["paths"])
     # noinspection PyArgumentList
     return task_class(name=config["name"], path_dict=config["paths"], **task_kwargs)
 

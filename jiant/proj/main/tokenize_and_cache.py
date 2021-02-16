@@ -143,6 +143,8 @@ def iter_chunk_and_save(task, phase, examples, feat_spec, tokenizer, args: RunCo
 
 def main(args: RunConfiguration):
     task = tasks.create_task_from_config_path(config_path=args.task_config_path, verbose=True)
+
+    print(task)
     feat_spec = model_resolution.build_featurization_spec(
         model_type=args.model_type, max_seq_length=args.max_seq_length,
     )
@@ -178,6 +180,7 @@ def main(args: RunConfiguration):
             tokenizer=tokenizer,
             args=args,
         )
+
         evaluation_scheme = evaluate.get_evaluation_scheme_for_task(task)
         shared_caching.chunk_and_save(
             data=evaluation_scheme.get_labels_from_cache_and_examples(

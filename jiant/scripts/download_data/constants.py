@@ -13,7 +13,11 @@ FAKENEWS_TASKS = {"fakenews_forecasting", "fakenews_unseen_1", "fakenews_unseen_
                   "nela_unseen_4", "nela_unseen_5", "fakenews_forecasting_reliability",
                   "fakenews_unseen_reliability_1", "fakenews_unseen_reliability_2", "fakenews_unseen_reliability_3",
                   "fakenews_unseen_reliability_4", "fakenews_unseen_reliability_5",
-                  "fakenewscorpus_1", "fakenewscorpus_2", "fakenewscorpus_3", "fakenewscorpus_4", "fakenewscorpus_5"
+                  "fakenewscorpus_1", "fakenewscorpus_2", "fakenewscorpus_3", "fakenewscorpus_4", "fakenewscorpus_5",
+                  "unseen_cind_satire_1", "unseen_cind_satire_2", "unseen_cind_satire_3", "unseen_cind_satire_4",
+                  "unseen_cind_satire_5", "nela_satire_1", "nela_satire_2", "nela_satire_3",
+                  "nela_satire_4", "nela_satire_5",
+                  "fakenewscorpus_satire_1", "fakenewscorpus_satire_2", "fakenewscorpus_satire_3", "fakenewscorpus_satire_4", "fakenewscorpus_satire_5"
                   }
 
 CLAIMBUSTER_TASKS = {'claimbuster_1', 'claimbuster_2', 'claimbuster_3', 'claimbuster_4', 'claimbuster_5'}

@@ -27,6 +27,14 @@ COMMONSENSE_KNOWLEDGE = {
 
 }
 
+SATIRE_TASKS = {
+    'nela_unseen': 'nela_satire',
+    'fakenews_forecasting': 'forecasting_cind_satire',
+    'fakenews_forecasting_reliability': 'forecasting_cind_satire',
+    'fakenews_unseen_reliability': 'unseen_cind_satire',
+    'fakenewscorpus': 'fakenewscorpus_satire'
+}
+
 
 def run_mtl(args):
     fold = args.fold
@@ -38,15 +46,16 @@ def run_mtl(args):
     eval_batch_size = args.eval_batch_size
     task_name = f'{args.task_name}_{fold}' if fold else args.task_name
     epochs = args.epochs
+    use_satire = args.use_satire
     commonsense_type = None
     if use_commonsense_knowledge:
         commonsense_type = COMMONSENSE_KNOWLEDGE[args.commonsenseknowledge]
-        exp_name = f'../{args.task_name}_{fold}_{commonsense_type}'
+        exp_name = f'../trained_models/{args.task_name}_{fold}_{commonsense_type}'
     else:
-        exp_name = f'../{args.task_name}_{fold}'
+        exp_name = f'../trained_models/{args.task_name}_{fold}'
 
-    task_data_path = f'../{DATASETS[args.task_name]}'
-    task_config_path = f'../{DATASETS[args.task_name]}/configs/{task_name}_config.json'
+    task_data_path = f'../trained_models/{DATASETS[args.task_name]}'
+    task_config_path = f'../trained_models/{DATASETS[args.task_name]}/configs/{task_name}_config.json'
     export_model.lookup_and_export_model(
         model_type=pretrained_model,
         output_base_path=f"../models/{pretrained_model}",
@@ -61,6 +70,9 @@ def run_mtl(args):
         max_seq_length=args.task_max_len,
     ))
 
+    task_names = []
+    task_names.append(task_name)
+
     if use_commonsense_knowledge:
         downloader.download_data([commonsense_type], f"{task_data_path}")
         tokenize_and_cache.main(tokenize_and_cache.RunConfiguration(
@@ -71,12 +83,25 @@ def run_mtl(args):
             phases=['train', 'val'] if commonsense_type == 'socialiqa' else ['train', 'val', 'test'],
             max_seq_length=args.commonsense_max_len,
         ))
-
-    task_names = []
-    task_names.append(task_name)
-
-    if use_commonsense_knowledge:
         task_names.append(commonsense_type)
+
+    if use_satire:
+        satire_task_name = SATIRE_TASKS[args.task_name]
+        satire_task_name = f'{satire_task_name}_{fold}' if fold else satire_task_name
+        satire_task_data_path = f'../trained_models/{SATIRE_TASKS[args.task_name]}'
+
+        files_tasks_download.download_task_data_and_write_config(satire_task_name, satire_task_data_path,
+                                                                 f"{task_data_path}/configs/{satire_task_name}_config.json")
+
+        tokenize_and_cache.main(tokenize_and_cache.RunConfiguration(
+            task_config_path=f"{task_data_path}/configs/{satire_task_name}_config.json",
+            model_type=pretrained_model,
+            model_tokenizer_path=f"../models/{pretrained_model}/tokenizer",
+            output_dir=f'{exp_name}/cache/{satire_task_name}',
+            phases=['train', 'val', 'test'],
+            max_seq_length=args.satire_max_len,
+        ))
+        task_names.append(satire_task_name)
 
     jiant_run_config = configurator.SimpleAPIMultiTaskConfigurator(
         task_config_base_path=f"{task_data_path}/configs",
@@ -118,10 +143,12 @@ if __name__ == '__main__':
     parser.add_argument('--learning_rate', type=float)
     parser.add_argument('--pretrained_model', type=str)
     parser.add_argument('--use_commonsense_knowledge', action='store_true')
+    parser.add_argument('--use_satire', action='store_true')
     parser.add_argument('--commonsenseknowledge', choices=['general', 'social', 'physical'])
     parser.add_argument('--use_gpu', action='store_true')
     parser.add_argument('--commonsense_max_len', type=int)
     parser.add_argument('--task_max_len', type=int)
+    parser.add_argument('--satire_max_len', type=int)
     parser.add_argument('--train_batch_size', type=int)
     parser.add_argument('--eval_batch_size', type=int)
     parser.add_argument('--task_name', type=str,

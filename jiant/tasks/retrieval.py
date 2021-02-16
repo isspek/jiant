@@ -75,6 +75,7 @@ from jiant.tasks.lib.winogrande import WinograndeTask
 from jiant.tasks.lib.piqa import PiqaTask
 from jiant.tasks.lib.fakenewstasks.fakenewsdetection import ForecastingTask
 from jiant.tasks.lib.fakenewstasks.reliability import ReliabilityTask
+from jiant.tasks.lib.fakenewstasks.satire import SatireTask
 from jiant.tasks.lib.fakenewstasks.claimbuster import ClaimBusterTask
 
 from jiant.tasks.core import Task
@@ -175,11 +176,27 @@ TASK_DICT = {
     "fakenews_unseen_reliability_4": ReliabilityTask,
     "fakenews_unseen_reliability_5": ReliabilityTask,
     "fakenews_forecasting_reliability": ReliabilityTask,
+    "fakenews_forecasting_reliability_satire": SatireTask,
+    "unseen_cind_satire_1": SatireTask,
+    "unseen_cind_satire_2": SatireTask,
+    "unseen_cind_satire_3": SatireTask,
+    "unseen_cind_satire_4": SatireTask,
+    "unseen_cind_satire_5": SatireTask,
     "fakenewscorpus_1": ReliabilityTask,
     "fakenewscorpus_2": ReliabilityTask,
     "fakenewscorpus_3": ReliabilityTask,
     "fakenewscorpus_4": ReliabilityTask,
     "fakenewscorpus_5": ReliabilityTask,
+    "fakenewscorpus_satire_1": SatireTask,
+    "fakenewscorpus_satire_2": SatireTask,
+    "fakenewscorpus_satire_3": SatireTask,
+    "fakenewscorpus_satire_4": SatireTask,
+    "fakenewscorpus_satire_5": SatireTask,
+    "nela_satire_1": SatireTask,
+    "nela_satire_2": SatireTask,
+    "nela_satire_3": SatireTask,
+    "nela_satire_4": SatireTask,
+    "nela_satire_5": SatireTask,
 }
 
 

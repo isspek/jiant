@@ -976,6 +976,7 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
             tasks.ArctTask,
             tasks.PiqaTask,
             tasks.ReliabilityTask,
+            tasks.SatireTask,
             tasks.ClaimBusterTask
         ),
     ):

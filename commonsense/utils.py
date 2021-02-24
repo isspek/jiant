@@ -77,7 +77,6 @@ class ConceptNet:
             except:
                 print(f'Error is occured at {mention}')
                 continue
-        print(mentions)
         return mentions
 
     def entity_linker(self, mentions):
@@ -172,27 +171,26 @@ def pipeline_concept_extraction_commonsense(data_dir, conceptnetkb):
     downloader.download_data(['commonsenseqa'], data_dir)
     data_dir = data_dir / 'data' / 'commonsenseqa'
 
-    documents = []
-
     test_file = data_dir / 'test.jsonl'
     print('Processing test data')
     resulted_file = concept_dir / 'test_commonsense_concepts.json'
-    extract_and_write_concepts_from_jsonl(conceptnetkb, documents, test_file, resulted_file)
+    extract_and_write_concepts_from_jsonl(conceptnetkb, test_file, resulted_file)
 
     val_file = data_dir / 'val.jsonl'
     print('Processing val data')
     resulted_file = concept_dir / 'val_commonsense_concepts.json'
-    extract_and_write_concepts_from_jsonl(conceptnetkb, documents, val_file, resulted_file)
+    extract_and_write_concepts_from_jsonl(conceptnetkb, val_file, resulted_file)
 
     train_file = data_dir / 'train.jsonl'
     print('Processing train data')
     resulted_file = concept_dir / 'train_commonsense_concepts.json'
-    extract_and_write_concepts_from_jsonl(conceptnetkb, documents, train_file, resulted_file)
+    extract_and_write_concepts_from_jsonl(conceptnetkb, train_file, resulted_file)
 
 
-def extract_and_write_concepts_from_jsonl(conceptnetkb, documents, test_file, resulted_file):
+def extract_and_write_concepts_from_jsonl(conceptnetkb, test_file, resulted_file):
     with open(test_file, 'r') as json_file:
         json_list = list(json_file)
+    documents = []
     for json_str in json_list:
         q_entities = extract_entities_from_json(conceptnetkb, json_str)
         documents.append(
@@ -234,8 +232,12 @@ if __name__ == '__main__':
     parser.add_argument('--source_dir', type=str)
     parser.add_argument('--extract', action='store_true')
     parser.add_argument('--dtype', choices=['commonsenseqa', 'news'])
+    parser.add_argument('--match', action='store_true')
     args = parser.parse_args()
 
-    if args.extract and args.news:
+    if args.extract:
         conceptnetkb = ConceptNet()
         EXT_PIPELINES[args.dtype](args.source_dir, conceptnetkb)
+
+    if args.match:
+        pass

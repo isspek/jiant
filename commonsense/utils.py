@@ -218,8 +218,73 @@ def extract_entities_from_json(conceptnetkb, json_str):
     return q_entities
 
 
+def calc_jaccard(doc_1, doc_2):
+    '''
+    :param doc_1: list of words
+    :param doc_2: list of words
+    :return: float score
+    '''
+    doc_1 = set(doc_1)
+    doc_2 = set(doc_2)
+    return float(len(doc_1.intersection(doc_2)) / len(doc_1.union(doc_2)))
+
+
 def pipeline_concept_matching(source_data_path, target_data_path):
     pass
+
+
+METRICS = {
+    'jaccard': calc_jaccard
+}
+
+
+def pipeline_concept_similarity(source_data_path, target_data_path, metric):
+    # decompose train, dev, test and so on
+    source_dir = Path(source_data_path)
+    source_concepts_path = source_dir / 'concepts' / 'commonsense_concepts.json'
+    source_concepts = pd.read_json(source_concepts_path)
+    target_dir = Path(target_data_path)
+
+    for data_path in source_dir.glob('*.tsv'):
+        print(f'Reading {data_path}')
+        data = pd.read_csv(data_path, sep='\t')
+        contents = data['content'].tolist()
+        filtered_source_concepts = source_concepts[source_concepts['content'].isin(contents)][
+            'concept_entities'].tolist()
+
+        if 'train' in data_path.stem:
+            target_concepts_path = target_dir / 'concepts' / 'train_commonsense_concepts.json'
+        elif 'val' in data_path.stem:
+            target_concepts_path = target_dir / 'concepts' / 'val_commonsense_concepts.json'
+        elif 'test' in data_path.stem:
+            target_concepts_path = target_dir / 'concepts' / 'test_commonsense_concepts.json'
+
+        target_concepts = pd.read_json(target_concepts_path)
+        target_concepts = target_concepts['concept_entities'].tolist()
+
+        if 'train' in data_path.stem:
+            results_path = target_dir / 'concepts' / f'{source_dir.stem}_train_ids.tsv.gz'
+        elif 'val' in data_path.stem:
+            results_path = target_dir / 'concepts' / f'{source_dir.stem}_val_ids.tsv.gz'
+        elif 'test' in data_path.stem:
+            results_path = target_dir / 'concepts' / f'{source_dir.stem}_test_ids.tsv.gz'
+
+        for source_id, source_concept in enumerate(tqdm(filtered_source_concepts)):
+            results = []
+            for target_id, target_concept in enumerate(target_concepts):
+                sim_score = METRICS[metric](source_concept, target_concept)
+
+                if sim_score == 0:
+                    continue
+
+                results.append({
+                    'target_id': target_id,
+                    'source_id': source_id,
+                    metric: sim_score
+                })
+
+            results = pd.DataFrame(results)
+            results.to_csv(results_path, sep='\t', index=False, mode='a', compression="gzip")
 
 
 EXT_PIPELINES = {
@@ -230,9 +295,12 @@ EXT_PIPELINES = {
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--source_dir', type=str)
+    parser.add_argument('--target_dir', type=str)
     parser.add_argument('--extract', action='store_true')
     parser.add_argument('--dtype', choices=['commonsenseqa', 'news'])
     parser.add_argument('--match', action='store_true')
+    parser.add_argument('--calculate', action='store_true')
+    parser.add_argument('--metric', choices=['jaccard'])
     args = parser.parse_args()
 
     if args.extract:
@@ -241,3 +309,6 @@ if __name__ == '__main__':
 
     if args.match:
         pass
+
+    if args.calculate:
+        pipeline_concept_similarity(args.source_dir, args.target_dir, args.metric)
